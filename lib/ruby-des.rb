@@ -1,4 +1,4 @@
-$:.unshift(File.dirname(__FILE__))
+# $:.unshift(File.dirname(__FILE__))
 
 require 'ruby-des/feistel'
 require 'ruby-des/key_schedule'
@@ -76,12 +76,14 @@ module RubyDES
       if input.is_a?(String)
         raise "RubyDES::InvalidStringLength: Input String must contain (8) characters." unless input.length.eql?(8)
         
-        @string    = input
-        @bit_array = input.unpack('B*').join.split('').collect{|b| b.to_i}
+        @string = input
+        bin     = ""
+        input.unpack("C*").each{|c| bin << "%08b" % c}
+        @bit_array = bin.split('').collect{|b| b.to_i}
       elsif input.is_a?(Array)
         raise "RubyDES::InvalidArraySize: Input Array must contain (64) bits." unless input.size.eql?(64)
         
-        @string    = input.join.to_a.pack('B*')
+        @string    = [input.join].pack('B*')
         @bit_array = input
       else
         raise "RubyDES::InvalidFormat: Input must be a String or an Array."

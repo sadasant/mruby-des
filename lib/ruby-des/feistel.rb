@@ -81,7 +81,12 @@ module Feistel
     
     # Substitute every 6-bit array with the 4-bit array specified by the appropriate s-box.
     8.times do |i|
-        b[i] = S[i][m[i] + n[i]].to_s(2).rjust(4, '0').split('').collect{|bit| bit.to_i}
+        bin = S[i][m[i] + n[i]].to_s(2)
+        if bin.size < 4
+          dif = 4 - bin.size
+          bin = ('0'*dif) + bin
+        end
+        b[i] = bin.split('').collect{|bit| bit.to_i}
     end
         
     return P.collect{|p| b.flatten[p - 1]}
