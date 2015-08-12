@@ -83,7 +83,13 @@ module RubyDES
       elsif input.is_a?(Array)
         raise "RubyDES::InvalidArraySize: Input Array must contain (64) bits." unless input.size.eql?(64)
         
-        @string    = [input.join.to_i(2).to_s(16)].pack("H*")
+        hex = input.join.to_i(2).to_s(16)
+        if hex.size < 16
+          dif = 16 - hex.size
+          hex = ("0" * dif) + hex
+        end
+
+        @string    = [hex].pack("H*")
         @bit_array = input
       else
         raise "RubyDES::InvalidFormat: Input must be a String or an Array."
